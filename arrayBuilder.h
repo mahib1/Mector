@@ -157,7 +157,6 @@
     mutable std::recursive_mutex _mutex;                                       \
                                                                                \
   public:                                                                      \
-    /* Default constructor */                                                  \
     type##Array() {                                                            \
       std::lock_guard<std::recursive_mutex> lock(_mutex);                      \
       _cap = DEFAULT_CAP_VALUE;                                                \
@@ -167,11 +166,9 @@
       _end = _buff;                                                            \
     }                                                                          \
                                                                                \
-    /* Delete copy constructor and copy assignment operator */               \
     type##Array(const type##Array &other) = delete;                            \
     type##Array &operator=(const type##Array &other) = delete;                 \
                                                                                \
-    /* Move constructor */                                                     \
     type##Array(type##Array &&other) noexcept {                                \
       std::lock_guard<std::recursive_mutex> lock(other._mutex);                \
       _buff = other._buff;                                                     \
@@ -186,7 +183,6 @@
       other._end = nullptr;                                                    \
     }                                                                          \
                                                                                \
-    /* Move assignment operator */                                             \
     type##Array &operator=(type##Array &&other) noexcept {                     \
       if (this != &other) {                                                    \
         std::lock_guard<std::recursive_mutex> lock1(this->_mutex);             \
@@ -208,7 +204,6 @@
       return *this;                                                            \
     }                                                                          \
                                                                                \
-    /* Push_back accepts the element by value and moves it into place */       \
     void push_back(type element) {                                             \
       std::lock_guard<std::recursive_mutex> lock(_mutex);                      \
       if (_size > 0.7 * _cap)                                                  \
@@ -218,7 +213,6 @@
       _end = _buff + _size;                                                    \
     }                                                                          \
                                                                                \
-    /* Resize the array by doubling its capacity */                          \
     void resize() {                                                            \
       std::lock_guard<std::recursive_mutex> lock(_mutex);                      \
       _cap *= 2;                                                               \
